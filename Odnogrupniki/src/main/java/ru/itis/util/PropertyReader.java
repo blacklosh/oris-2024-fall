@@ -1,7 +1,6 @@
 package ru.itis.util;
 
 import lombok.experimental.UtilityClass;
-import ru.itis.Main;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +14,7 @@ public class PropertyReader {
     static {
         properties = new Properties();
         try {
-            InputStream is = Main.class.getClassLoader().getResourceAsStream("app.properties");
+            InputStream is = PropertyReader.class.getClassLoader().getResourceAsStream("app.properties");
             properties.load(is);
         } catch (IOException e) {
             e.printStackTrace();

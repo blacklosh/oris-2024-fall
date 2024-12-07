@@ -6,22 +6,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 
-    private static final List<String> PROTECTED_URIS = List.of("/main", "/logout");
-    private static final List<String> NOTAUTH_URIS = List.of("/signIn", "/signUp");
+    private List<String> PROTECTED_URIS;
+    private List<String> NOTAUTH_URIS;
 
-    private static final String PROTECTED_REDIRECT = "/signIn";
-    private static final String NOTAUTH_REDIRECT = "/main";
+    private String PROTECTED_REDIRECT;
+    private String NOTAUTH_REDIRECT;
 
-    public static final String AUTHORIZATION = "authorization";
+    private String AUTHORIZATION;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        ServletContext context = filterConfig.getServletContext();
+        PROTECTED_URIS = (List<String>) context.getAttribute("PROTECTED_URIS");
+        NOTAUTH_URIS = (List<String>) context.getAttribute("NOTAUTH_URIS");
 
+        PROTECTED_REDIRECT = (String) context.getAttribute("PROTECTED_REDIRECT");
+        NOTAUTH_REDIRECT = (String) context.getAttribute("NOTAUTH_REDIRECT");
+        AUTHORIZATION = (String) context.getAttribute("AUTHORIZATION");
     }
 
     @Override
@@ -57,6 +65,9 @@ public class AuthFilter implements Filter {
     private boolean isUserAuth(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session == null) return false;
+
+        Map<String, String> map = new HashMap<>();
+        map.put(null, "");
 
         Boolean flag = (Boolean) session.getAttribute(AUTHORIZATION);
         return flag != null && flag;

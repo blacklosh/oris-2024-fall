@@ -2,13 +2,9 @@ package ru.itis.servlet;
 
 import ru.itis.dto.AuthResponse;
 import ru.itis.dto.SignInRequest;
-import ru.itis.dto.SignUpRequest;
-import ru.itis.filter.AuthFilter;
-import ru.itis.mapper.impl.UserMapperImpl;
-import ru.itis.repository.impl.UserRepositoryImpl;
 import ru.itis.service.UserService;
-import ru.itis.service.impl.UserServiceImpl;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -19,9 +15,13 @@ public class SignInServlet extends HttpServlet {
 
     private UserService userService;
 
+    private String AUTHORIZATION;
+
     @Override
     public void init() throws ServletException {
-        userService = new UserServiceImpl(new UserRepositoryImpl(), new UserMapperImpl());
+        ServletContext context = getServletContext();
+        userService = (UserService) context.getAttribute("userService");
+        AUTHORIZATION = (String) context.getAttribute("AUTHORIZATION");
     }
 
     @Override
@@ -39,8 +39,8 @@ public class SignInServlet extends HttpServlet {
         AuthResponse authResponse = userService.signIn(signUpRequest);
         if(authResponse.getStatus() == 0) {
             HttpSession session = req.getSession(true);
-            session.setAttribute(AuthFilter.AUTHORIZATION, true);
-            session.setAttribute("userName", authResponse.getUser().getNickname());
+            session.setAttribute(AUTHORIZATION, true);
+            session.setAttribute("user", authResponse.getUser());
             resp.sendRedirect("/main");
         } else {
             resp.sendRedirect("/error?err=" + authResponse.getStatusDesc());

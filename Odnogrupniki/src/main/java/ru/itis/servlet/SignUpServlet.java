@@ -2,11 +2,9 @@ package ru.itis.servlet;
 
 import ru.itis.dto.AuthResponse;
 import ru.itis.dto.SignUpRequest;
-import ru.itis.mapper.impl.UserMapperImpl;
-import ru.itis.repository.impl.UserRepositoryImpl;
 import ru.itis.service.UserService;
-import ru.itis.service.impl.UserServiceImpl;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +19,8 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        userService = new UserServiceImpl(new UserRepositoryImpl(), new UserMapperImpl());
+        ServletContext context = getServletContext();
+        userService = (UserService) context.getAttribute("userService");
     }
 
     @Override
