@@ -6,8 +6,13 @@ import ru.itis.dto.MessageSendingDto;
 import ru.itis.dto.UserDataResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatsService {
+
+    Optional<ChatDto> findChatById(Long chatId);
+
+    boolean isUserInChat(Long userId, Long chatId);
 
     List<ChatDto> findAllChatsByUserId(Long userId);
 

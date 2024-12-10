@@ -13,6 +13,7 @@ import ru.itis.repository.ChatRepository;
 import ru.itis.service.ChatsService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class ChatsServiceImpl implements ChatsService {
@@ -22,6 +23,16 @@ public class ChatsServiceImpl implements ChatsService {
     private final ChatMapper chatMapper;
     private final UserMapper userMapper;
     private final MessageMapper messageMapper;
+
+    @Override
+    public Optional<ChatDto> findChatById(Long chatId) {
+        return chatRepository.findById(chatId).map(chatMapper::toDto);
+    }
+
+    @Override
+    public boolean isUserInChat(Long userId, Long chatId) {
+        return findAllUsersInChat(chatId).stream().anyMatch(c -> c.getId().equals(userId));
+    }
 
     @Override
     public List<ChatDto> findAllChatsByUserId(Long userId) {

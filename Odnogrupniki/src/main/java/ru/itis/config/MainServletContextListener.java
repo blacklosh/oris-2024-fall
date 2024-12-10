@@ -17,6 +17,7 @@ import ru.itis.service.ChatsService;
 import ru.itis.service.UserService;
 import ru.itis.service.impl.ChatsServiceImpl;
 import ru.itis.service.impl.UserServiceImpl;
+import ru.itis.servlet.ChatCommunicationWebSocketHandler;
 import ru.itis.util.PropertyReader;
 
 import javax.servlet.ServletContext;
@@ -63,6 +64,8 @@ public class MainServletContextListener implements ServletContextListener {
         context.setAttribute("AUTHORIZATION", AUTHORIZATION);
 
         ChatRepository chatRepository = new ChatRepositoryImpl(jdbcTemplate);
+
+        ChatCommunicationWebSocketHandler.chatRepository = chatRepository;
         ChatMapper chatMapper = new ChatMapperImpl();
         MessageMapper messageMapper = new MessageMapperImpl(userRepository);
 

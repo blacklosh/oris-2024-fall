@@ -11,6 +11,7 @@ import ru.itis.model.MessageEntity;
 import ru.itis.model.UserEntity;
 import ru.itis.repository.ChatRepository;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -105,7 +106,7 @@ public class ChatRepositoryImpl implements ChatRepository {
         public MessageEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             return MessageEntity.builder()
                     .id(rs.getLong("id"))
-                    .text(rs.getString("text"))
+                    .text(new String(rs.getString("text").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8))
                     .chatId(rs.getLong("chat_id"))
                     .authorId(rs.getLong("author_id"))
                     .build();

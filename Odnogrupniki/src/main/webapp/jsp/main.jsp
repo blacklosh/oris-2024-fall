@@ -21,6 +21,14 @@
                 </center>
                 <table border="2" style="margin-right: auto; margin-left: auto; margin-top: 0">
                     <tr>
+                        <td>
+                            <form enctype="multipart/form-data" action="/avatar" method="post">
+                                <input type="file" accept="image/jpeg" name="file"/>
+                                <input type="submit" value="Обновить аватар"/>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
                         <td><a href="/">Приветствие</a></td>
                     </tr>
                     <tr>
@@ -33,7 +41,7 @@
                         <td>Друзья</td>
                     </tr>
                     <tr>
-                        <td>Мессенджер</td>
+                        <td><a href="/chats">Мессенджер</a> </td>
                     </tr>
                     <tr>
                         <td><a href="/logout">Выход</a></td>

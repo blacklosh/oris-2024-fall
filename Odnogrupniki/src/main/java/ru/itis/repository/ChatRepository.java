@@ -19,4 +19,6 @@ public interface ChatRepository {
 
     MessageEntity saveNewMessage(MessageEntity message);
 
+
+
 }
