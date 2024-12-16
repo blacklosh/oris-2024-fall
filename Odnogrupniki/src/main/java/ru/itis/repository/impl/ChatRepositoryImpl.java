@@ -1,6 +1,8 @@
 package ru.itis.repository.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ChatRepositoryImpl implements ChatRepository {
 
@@ -65,7 +68,9 @@ public class ChatRepositoryImpl implements ChatRepository {
                 PreparedStatement ps = con.prepareStatement(SQL_INSERT, new String[] {"id"});
                 ps.setLong(1, message.getChatId());
                 ps.setLong(2, message.getAuthorId());
-                ps.setString(3, message.getText());
+                ps.setString(3, message.getText()
+                        .replace("<", "&lt;")
+                        .replace(">", "&gt;"));
                 return ps;
             }, holder);
             Long id = Objects.requireNonNull(holder.getKey()).longValue();
@@ -103,6 +108,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     private static final class MessageRowMapper implements RowMapper<MessageEntity> {
 
         @Override
+        @SneakyThrows
         public MessageEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             return MessageEntity.builder()
                     .id(rs.getLong("id"))

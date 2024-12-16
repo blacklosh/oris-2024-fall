@@ -15,4 +15,6 @@ public class MessageDto {
 
     private String authorNickname;
 
+    private String authorAvatarId;
+
 }

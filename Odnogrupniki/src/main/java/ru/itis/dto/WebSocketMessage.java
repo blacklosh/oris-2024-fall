@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WebSocketMessage {
 
-    private Long chatId;
-
     private String userName;
 
+    private Long chatId;
+
     private String message;
+
+    private String authorAvatarId;
 
 }

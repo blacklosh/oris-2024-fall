@@ -1,4 +1,4 @@
-<%--
+<%@ page import="ru.itis.dto.UserDataResponse" %><%--
   Created by IntelliJ IDEA.
   User: user
   Date: 09.11.2024
@@ -22,9 +22,12 @@
                 <table border="2" style="margin-right: auto; margin-left: auto; margin-top: 0">
                     <tr>
                         <td>
-                            <form enctype="multipart/form-data" action="/avatar" method="post">
-                                <input type="file" accept="image/jpeg" name="file"/>
-                                <input type="submit" value="Обновить аватар"/>
+                            <img src="/avatar?file=<%=((UserDataResponse)request.getAttribute("user")).getAvatarId()%>" width="50" height="50"/>
+                            <%=((UserDataResponse)request.getAttribute("user")).getNickname()%>
+                            <hr>
+                            <form action="/avatar" method="post" enctype="multipart/form-data">
+                                <input type="file" id="file" name="file" accept="image/jpeg"/>
+                                <input type="submit" value="Изменить аватар"/>
                             </form>
                         </td>
                     </tr>
@@ -41,7 +44,7 @@
                         <td>Друзья</td>
                     </tr>
                     <tr>
-                        <td><a href="/chats">Мессенджер</a> </td>
+                        <td><a href="/chats">Мессенджер</a></td>
                     </tr>
                     <tr>
                         <td><a href="/logout">Выход</a></td>

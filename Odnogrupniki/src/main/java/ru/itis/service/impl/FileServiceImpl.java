@@ -1,5 +1,6 @@
 package ru.itis.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.itis.exception.IncorrectFileTypeException;
@@ -13,21 +14,24 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 @Slf4j
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
 
-    private final String path = "c://cfg/oris-files";
+    private final String path;
 
-    private final String defaultImageName = "default";
+    private final String defaultImageName;
 
     @Override
     @SneakyThrows
-    public UUID updateFile(Part part) {
+    public UUID uploadFile(Part part) {
         UUID uuid = UUID.randomUUID();
-        if(part != null && part.getSize() > 0) {
+        if (part != null && part.getSize() > 0) {
             String contentType = part.getContentType();
-            if(!contentType.equalsIgnoreCase("image/jpeg")) {
+
+            if (!contentType.equalsIgnoreCase("image/jpeg")) {
                 throw new IncorrectFileTypeException();
             }
+
             part.write(path + File.separator + uuid + ".jpg");
             return uuid;
         }
@@ -48,6 +52,7 @@ public class FileServiceImpl implements FileService {
         OutputStream os = response.getOutputStream();
 
         response.setContentType("image/jpeg");
+        //response.setContentLength((int) imageFile.getTotalSpace());
 
         byte[] buffer = new byte[1024];
         int bytesRead;

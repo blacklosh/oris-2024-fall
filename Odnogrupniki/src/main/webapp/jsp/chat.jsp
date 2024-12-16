@@ -4,14 +4,15 @@
 <%@ page import="ru.itis.dto.UserDataResponse" %><%--
   Created by IntelliJ IDEA.
   User: user
-  Date: 04.12.2024
-  Time: 13:24
+  Date: 09.11.2024
+  Time: 14:08
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Welcome to my resource</title>
+
 </head>
 <body>
 
@@ -23,6 +24,12 @@
 
             </center>
             <table border="2" style="margin-right: auto; margin-left: auto; margin-top: 0">
+                <tr>
+                    <td>
+                        <img src="/avatar?file=<%=((UserDataResponse)request.getAttribute("user")).getAvatarId()%>" width="50" height="50"/>
+                        <%=((UserDataResponse)request.getAttribute("user")).getNickname()%>
+                    </td>
+                </tr>
                 <tr>
                     <td><a href="/">Приветствие</a></td>
                 </tr>
@@ -36,28 +43,34 @@
                     <td>Друзья</td>
                 </tr>
                 <tr>
-                    <td><a href="/chats">Мессенджер</a> </td>
+                    <td><a href="/chats">Мессенджер</a></td>
                 </tr>
                 <tr>
                     <td><a href="/logout">Выход</a></td>
                 </tr>
             </table>
         </td>
-        <td style="width: 60%; background-color: red;">
+        <td style="width: 60%; background-color: lightgray;">
             <!-- основной блок -->
-            <h1>Чат <%=((ChatDto) request.getAttribute("chat")).getTitle()%>:</h1>
+            <h1>
+                <%=((ChatDto) request.getAttribute("chat")).getTitle()%>
+            </h1>
 
+            Сообщения:
             <div id="messages">
                 <% for (MessageDto message : (List<MessageDto>) request.getAttribute("messages")) { %>
 
-                <%=message.getAuthorNickname()%>: <%=message.getText()%><br/>
+                <img src="/avatar?file=<%=message.getAuthorAvatarId()%>" width="50" height="50"/>
+                <%=message.getAuthorNickname()%>: <%=message.getText()%> <br/>
 
                 <% } %>
             </div>
 
             <form>
-                <input id="message" name="message"/>
-                <input id='button' type="submit" value="Отправить сообщение"/>
+                <label title="Новое сообщение:">
+                    <input id="message" type="text" name="message"/>
+                </label>
+                <input id="button" type="button" value="Отправить"/>
             </form>
         </td>
         <td style="width: 10%; background-color: black">
@@ -68,37 +81,40 @@
 
 <script>
     console.log("Script started");
-    var url = new URL(window.location.href)
-    var ws = new WebSocket("ws://" + url.host +"/ws")
+    const url1 = new URL(window.location.href);
+    const websocketUrl = 'ws://' + url1.host + '/websocket';
+    var ws = new WebSocket(websocketUrl);
     ws.onopen = function () {
-        console.log("Ws connected");
+        console.log("Connected to ws")
     }
     ws.onerror = function () {
-        console.log("Ws error");
+        console.log("Error with ws")
     }
-    ws.onmessage = function (message) {
-        console.log("Получил сообщение " + message);
-        var json = JSON.parse(message.data)
+    ws.onmessage = function processMessage(message) {
+        console.log("Got message " + JSON.stringify(message.data));
+        var json = JSON.parse(message.data);
         if(json.chatId === <%=((ChatDto) request.getAttribute("chat")).getId()%>) {
-            var messageBlock = document.getElementById("messages");
-            messageBlock.innerHTML += json.userName + ": " + json.message + "<br/>";
+            var messageBlock = document.getElementById('messages');
+            messageBlock.innerHTML += '<img src="/avatar?file=' + json.authorAvatarId + '" width="50" height="50"/>' + json.userName + ': ' + json.message + '<br/>';
         }
     }
-    document.getElementById("button").onclick = (e) => {
-        e.preventDefault();
-        var messageText = document.getElementById("message").value;
-        console.log("Нажали кнопку, дали текст " + messageText);
-        document.getElementById("message").value = ""
+    document.getElementById('button').onclick = function() {
+        var textFieldValue = document.getElementById('message').value;
+        document.getElementById('message').value = ""
+        myFunction(textFieldValue);
+    };
 
-        var sendJson = {
-            "message": messageText,
+    function myFunction(value) {
+        console.log("Нажали на кнопку и передали " + value);
+        var sendJs = {
             "chatId": <%=((ChatDto) request.getAttribute("chat")).getId()%>,
-            "userName": "<%=((UserDataResponse) request.getAttribute("user")).getNickname()%>"
-        }
-
-        var sendJsonString = JSON.stringify(sendJson);
-        console.log("Отправляю сообщение " + sendJson);
-        ws.send(sendJsonString);
+            "message": value,
+            "userName": "<%=((UserDataResponse)request.getAttribute("user")).getNickname()%>",
+            "authorAvatarId": "<%=((UserDataResponse)request.getAttribute("user")).getAvatarId()%>"
+        };
+        var sendJsString = JSON.stringify(sendJs);
+        console.log("Отправляю " + sendJsString);
+        ws.send(sendJsString);
     }
 </script>
 

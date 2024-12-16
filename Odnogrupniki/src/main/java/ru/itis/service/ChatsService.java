@@ -12,9 +12,9 @@ public interface ChatsService {
 
     Optional<ChatDto> findChatById(Long chatId);
 
-    boolean isUserInChat(Long userId, Long chatId);
-
     List<ChatDto> findAllChatsByUserId(Long userId);
+
+    boolean isUserChat(Long userId, Long chatId);
 
     List<UserDataResponse> findAllUsersInChat(Long chatId);
 

@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,6 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String SQL_SELECT_BY_NICKNAME = "select * from user_data where nickname = ?";
 
     private static final String SQL_INSERT = "insert into user_data(email, hash_password, nickname) values (?, ?, ?)";
+
+    private static final String SQL_UPDATE = "update user_data set avatar_id = ? where id = ?";
 
     private final UserRowMapper userRowMapper = new UserRowMapper();
 
@@ -77,6 +80,16 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override
+    public void addAvatar(Long userId, UUID avatarId) {
+        jdbcTemplate.update(con -> {
+            PreparedStatement ps = con.prepareStatement(SQL_UPDATE);
+            ps.setString(1, avatarId.toString());
+            ps.setLong(2, userId);
+            return ps;
+        });
+    }
+
     private static final class UserRowMapper implements RowMapper<UserEntity> {
 
         @Override
@@ -86,6 +99,7 @@ public class UserRepositoryImpl implements UserRepository {
                     .email(rs.getString("email"))
                     .nickname(rs.getString("nickname"))
                     .hashPassword(rs.getString("hash_password"))
+                    .avatarId(rs.getString("avatar_id"))
                     .build();
         }
     }

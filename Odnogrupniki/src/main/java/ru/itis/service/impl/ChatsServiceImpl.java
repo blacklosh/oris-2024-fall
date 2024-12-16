@@ -30,15 +30,15 @@ public class ChatsServiceImpl implements ChatsService {
     }
 
     @Override
-    public boolean isUserInChat(Long userId, Long chatId) {
-        return findAllUsersInChat(chatId).stream().anyMatch(c -> c.getId().equals(userId));
-    }
-
-    @Override
     public List<ChatDto> findAllChatsByUserId(Long userId) {
         return chatRepository.findAllByUserId(userId).stream()
                 .map(chatMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public boolean isUserChat(Long userId, Long chatId) {
+        return findAllUsersInChat(chatId).stream().anyMatch(c -> c.getId().equals(userId));
     }
 
     @Override

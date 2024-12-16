@@ -15,4 +15,6 @@ public class UserDataResponse {
 
     private String nickname;
 
+    private String avatarId;
+
 }

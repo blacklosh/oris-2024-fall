@@ -17,4 +17,6 @@ public class UserEntity {
 
     private String nickname;
 
+    private String avatarId;
+
 }

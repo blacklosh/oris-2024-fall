@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface FileService {
 
-    UUID updateFile(Part part);
+    UUID uploadFile(Part part);
 
     void downloadFile(UUID id, HttpServletResponse response);
 

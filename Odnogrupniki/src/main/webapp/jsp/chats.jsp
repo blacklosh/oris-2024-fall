@@ -1,15 +1,16 @@
 <%@ page import="ru.itis.dto.ChatDto" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="ru.itis.dto.UserDataResponse" %><%--
   Created by IntelliJ IDEA.
   User: user
-  Date: 04.12.2024
-  Time: 13:24
+  Date: 09.11.2024
+  Time: 14:08
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Welcome to my resource</title>
 </head>
 <body>
 
@@ -21,6 +22,12 @@
 
             </center>
             <table border="2" style="margin-right: auto; margin-left: auto; margin-top: 0">
+                <tr>
+                    <td>
+                        <img src="/avatar?file=<%=((UserDataResponse)request.getAttribute("user")).getAvatarId()%>" width="50" height="50"/>
+                        <%=((UserDataResponse)request.getAttribute("user")).getNickname()%>
+                    </td>
+                </tr>
                 <tr>
                     <td><a href="/">Приветствие</a></td>
                 </tr>
@@ -34,7 +41,7 @@
                     <td>Друзья</td>
                 </tr>
                 <tr>
-                    <td><a href="/chats">Мессенджер</a> </td>
+                    <td><a href="/chats">Мессенджер</a></td>
                 </tr>
                 <tr>
                     <td><a href="/logout">Выход</a></td>
@@ -43,10 +50,12 @@
         </td>
         <td style="width: 60%; background-color: red;">
             <!-- основной блок -->
-            <h1>Твои чаты:</h1>
+            <h1>
+                Твои чаты:
+            </h1>
             <% for (ChatDto chat : (List<ChatDto>) request.getAttribute("chats")) { %>
 
-            <%=chat.getId()%>: <a href="/chat?chat=<%=chat.getId()%>"><%=chat.getTitle()%></a><br/>
+            <%=chat.getId()%>: <a href="/chat?id=<%=chat.getId()%>"><%=chat.getTitle()%></a>  <br/>
 
             <% } %>
         </td>
@@ -55,8 +64,6 @@
         </td>
     </tr>
 </table>
-
-
 
 </body>
 </html>

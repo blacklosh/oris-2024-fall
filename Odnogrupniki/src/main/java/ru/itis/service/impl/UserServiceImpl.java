@@ -13,6 +13,7 @@ import ru.itis.service.UserService;
 import ru.itis.util.AuthUtils;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -75,6 +76,11 @@ public class UserServiceImpl implements UserService {
             return response(9, "Password mismatch", null);
 
         return response(0, "OK", userMapper.toDto(user));
+    }
+
+    @Override
+    public void setAvatar(Long userId, UUID fileId) {
+        userRepository.addAvatar(userId, fileId);
     }
 
     private AuthResponse response(int status, String statusDesc, UserDataResponse user) {

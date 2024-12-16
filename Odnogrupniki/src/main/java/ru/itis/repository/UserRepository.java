@@ -3,6 +3,7 @@ package ru.itis.repository;
 import ru.itis.model.UserEntity;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface UserRepository {
 
@@ -13,5 +14,7 @@ public interface UserRepository {
     Optional<UserEntity> findUserByNickname(String nickname);
 
     Optional<UserEntity> saveNewUser(UserEntity user);
+
+    void addAvatar(Long userId, UUID avatarId);
 
 }

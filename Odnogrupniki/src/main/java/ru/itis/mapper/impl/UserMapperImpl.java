@@ -25,6 +25,7 @@ public class UserMapperImpl implements UserMapper {
                 .id(entity.getId())
                 .email(entity.getEmail())
                 .nickname(entity.getNickname())
+                .avatarId(entity.getAvatarId())
                 .build();
     }
 }
